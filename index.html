@@ -1,1 +1,220 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>For Bhavya</title>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --accent: #ff4d6d;
+            --glass: rgba(255, 255, 255, 0.5);
+            --border: rgba(255, 255, 255, 0.8);
+            --text: #4a001e;
+            /* High-energy spring for the zoom effect */
+            --zoom-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+        body, html {
+            margin: 0; padding: 0; 
+            width: 100vw; height: 100vh;
+            background: #fff5f7; color: var(--text);
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", sans-serif;
+            overflow: hidden;
+        }
+
+        /* --- RADIANT BACKGROUND --- */
+        .mesh-container {
+            position: fixed; inset: 0; z-index: -1;
+            filter: blur(70px); opacity: 0.8;
+        }
+        .blob {
+            position: absolute; width: 80vw; height: 80vw;
+            border-radius: 50%; animation: move 18s infinite alternate;
+        }
+        .blob-1 { background: #ffafbd; top: -10%; left: -10%; }
+        .blob-2 { background: #ffc3a0; bottom: -10%; right: -10%; animation-delay: -4s; }
+
+        @keyframes move {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(10vw, 10vh) scale(1.3); }
+        }
+
+        /* --- HARD ZOOM ANIMATION FOR TRANSITION --- */
+        .hard-zoom-out { animation: explode 0.8s cubic-bezier(0.8, 0, 0.2, 1) forwards; }
+        @keyframes explode {
+            0% { transform: scale(1); opacity: 1; filter: blur(0px); }
+            100% { transform: scale(15); opacity: 0; filter: blur(50px); }
+        }
+
+        /* --- ENTRY SECTION --- */
+        #gate-screen {
+            width: 100vw; height: 100vh;
+            display: flex; flex-direction: column;
+            justify-content: center; align-items: center;
+            padding: 20px; text-align: center;
+            z-index: 10;
+        }
+
+        .hero-text { font-size: 64px; font-weight: 900; margin: 0; letter-spacing: -3px; color: var(--accent); }
+
+        .input-group { width: 100%; max-width: 280px; margin-top: 30px; }
+        input {
+            width: 100%; background: var(--glass); border: 2px solid var(--border);
+            padding: 18px; border-radius: 20px; color: var(--text); font-size: 18px;
+            text-align: center; outline: none; backdrop-filter: blur(20px);
+            transition: all 0.4s var(--zoom-spring);
+        }
+        input:focus { transform: scale(1.08); border-color: var(--accent); box-shadow: 0 10px 25px rgba(255, 77, 109, 0.1); }
+
+        .btn-go {
+            background: var(--accent); color: white; border: none; padding: 16px 40px;
+            border-radius: 50px; font-weight: 800; font-size: 15px; margin-top: 30px;
+            cursor: pointer; transition: all 0.4s var(--zoom-spring);
+            box-shadow: 0 10px 20px rgba(255, 77, 109, 0.2);
+        }
+        .btn-go:hover { transform: scale(1.15); background: #ff3355; box-shadow: 0 15px 30px rgba(255, 77, 109, 0.4); }
+        .btn-go:active { transform: scale(0.9); }
+
+        /* --- REFINED MINI DASHBOARD --- */
+        #home-screen {
+            display: none; width: 100vw; height: 100vh;
+            padding: 20px; 
+            grid-template-columns: repeat(2, 160px);
+            grid-template-rows: repeat(3, 150px);
+            grid-gap: 20px;
+            justify-content: center; align-content: center;
+            opacity: 0; transform: scale(0.1);
+        }
+
+        .bento {
+            position: relative;
+            background: var(--glass); backdrop-filter: blur(25px);
+            border-radius: 32px; border: 2px solid var(--border);
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            text-decoration: none; color: var(--text); 
+            transition: all 0.5s var(--zoom-spring);
+            overflow: hidden;
+        }
+
+        /* --- THE ZOOM HOVER ANIMATION --- */
+        .bento:hover { 
+            transform: scale(1.12) translateY(-5px) !important; 
+            background: rgba(255, 255, 255, 0.9);
+            border-color: var(--accent);
+            box-shadow: 0 25px 50px rgba(255, 77, 109, 0.15);
+            z-index: 50; /* Ensure it zooms over other cards */
+        }
+
+        /* Shine sweep effect on hover */
+        .bento::after {
+            content: '';
+            position: absolute; top: -50%; left: -60%; width: 20%; height: 200%;
+            background: rgba(255, 255, 255, 0.4);
+            transform: rotate(30deg);
+            transition: all 0.6s var(--zoom-spring);
+            opacity: 0;
+        }
+        .bento:hover::after { left: 120%; opacity: 1; }
+
+        .bento:active { transform: scale(0.92) !important; }
+
+        .card-wide { grid-column: span 2; height: 150px; }
+        .card-tall { grid-row: span 2; height: 320px; }
+        
+        h2 { font-size: 19px; font-weight: 800; margin: 10px 0 0 0; }
+        p { font-size: 12px; opacity: 0.6; margin: 4px 0 0 0; }
+
+        /* Loader */
+        .loader { display: none; margin-top: 30px; width: 100%; max-width: 280px; }
+        .progress-track { width: 100%; height: 6px; background: rgba(0,0,0,0.05); border-radius: 10px; overflow: hidden; }
+        .progress-fill { width: 0%; height: 100%; background: var(--accent); transition: 0.4s; }
+    </style>
+</head>
+<body>
+
+    <div class="mesh-container">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+    </div>
+
+    <div id="gate-screen">
+        <h1 class="hero-text">BHAVYA.</h1>
+        <div style="font-size: 12px; letter-spacing: 4px; opacity: 0.6; font-weight: 800;">DECRYPTED FOR YOU</div>
+        
+        <div class="input-group">
+            <input type="password" id="secret-code" placeholder="Your Secret Key">
+        </div>
+
+        <button class="btn-go" id="btn" onclick="startEncryption()">DECRYPT LOVE</button>
+
+        <div class="loader" id="loader">
+            <div class="progress-track"><div class="progress-fill" id="fill"></div></div>
+            <div id="status" style="font-size: 10px; margin-top: 10px; font-weight: 900; color: var(--accent); letter-spacing: 1px;">INITIALIZING...</div>
+        </div>
+    </div>
+
+    <div id="home-screen">
+        <a href="letter.html" class="bento card-wide">
+            <i data-lucide="heart" size="32" fill="#ff4d6d" color="#ff4d6d"></i>
+            <h2>The Letter</h2>
+            <p>From Viswa's Heart</p>
+        </a>
+        <a href="reason.html" class="bento card-tall">
+            <i data-lucide="sparkles" size="36" color="#ff9500"></i>
+            <h2 style="margin-top: 20px;">The Whys</h2>
+            <p>Your magic decoded</p>
+        </a>
+        <a href="https://yourlink.com" target="_blank" class="bento">
+            <i data-lucide="camera" size="28" color="#5856d6"></i>
+            <h2>Album</h2>
+        </a>
+        <div class="bento">
+            <i data-lucide="star" size="28" fill="#ffd60a" color="#ffd60a"></i>
+            <h2 style="font-size: 15px;">Special</h2>
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+        const SECRET_KEY = "erhdzzmwyszebz.nb.xzmez.hrgv";
+
+        function startEncryption() {
+            const input = document.getElementById('secret-code').value;
+            if(input !== SECRET_KEY) return alert("Bhavya only! ❤️");
+
+            document.getElementById('btn').style.display = 'none';
+            document.getElementById('loader').style.display = 'block';
+
+            let p = 0;
+            const msgs = ["MATCHING DNA", "CONFIRMING QUEEN", "ACCESS GRANTED"];
+            const interval = setInterval(() => {
+                p++;
+                document.getElementById('fill').style.width = (p*33.3) + "%";
+                document.getElementById('status').innerText = msgs[p-1] || "DECRYPTING...";
+                if(p >= 3) {
+                    clearInterval(interval);
+                    setTimeout(() => {
+                        document.getElementById('gate-screen').classList.add('hard-zoom-out');
+                        setTimeout(showHome, 600);
+                    }, 400);
+                }
+            }, 800);
+        }
+
+        function showHome() {
+            document.getElementById('gate-screen').style.display = 'none';
+            const home = document.getElementById('home-screen');
+            home.style.display = 'grid';
+            setTimeout(() => {
+                home.style.transition = "all 0.9s var(--zoom-spring)";
+                home.style.opacity = "1";
+                home.style.transform = "scale(1)";
+            }, 50);
+        }
+    </script>
+</body>
+</html>
